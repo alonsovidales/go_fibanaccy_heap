@@ -1,4 +1,4 @@
-package graphs
+package fibheap
 
 import (
 	"fmt"
