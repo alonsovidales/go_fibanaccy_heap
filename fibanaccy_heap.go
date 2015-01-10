@@ -16,18 +16,22 @@ type node struct {
 	r       *node
 }
 
-type FibanaccyHeap struct {
+// FibonacciHeap Fibbonacy heap: http://en.wikipedia.org/wiki/Fibonacci_heap
+type FibonacciHeap struct {
 	min   *node
 	nodes map[interface{}]*node
 }
 
-func New() *FibanaccyHeap {
-	return &FibanaccyHeap{
+// New Returns a new FibonacciHeap instance
+func New() *FibonacciHeap {
+	return &FibonacciHeap{
 		nodes: make(map[interface{}]*node),
 	}
 }
 
-func (fh *FibanaccyHeap) Add(v float64, c interface{}) {
+// Add adds a new value to the Fibonacci heap, v will be used as score for the
+// new element, and c has to contain the element to be added
+func (fh *FibonacciHeap) Add(v float64, c interface{}) {
 	newNode := &node{
 		mark:    false,
 		rank:    1,
@@ -55,40 +59,8 @@ func (fh *FibanaccyHeap) Add(v float64, c interface{}) {
 	}
 }
 
-func (fh *FibanaccyHeap) moveToRoot(n *node) {
-	if n.parent != nil {
-		if n.r != n {
-			n.parent.rank -= n.rank
-			n.parent.child = n.r
-		} else {
-			n.parent.child = nil
-			n.parent.rank = 1
-		}
-	}
-
-	n.r.l = n.l
-	n.l.r = n.r
-
-	n.r = fh.min.r
-	n.l = fh.min
-	fh.min.r.l = n
-	fh.min.r = n
-	n.parent = nil
-
-	if n.value < fh.min.value {
-		fh.min = n
-	}
-}
-
-func (fh *FibanaccyHeap) moveMarkedParentsToRoot(n *node) {
-	if n.mark {
-		fh.moveMarkedParentsToRoot(n.parent)
-		n.mark = false
-		fh.moveToRoot(n)
-	}
-}
-
-func (fh *FibanaccyHeap) DecreaseKey(c interface{}, v float64) {
+// DecreaseScore decreases the score for an existing element in the heap
+func (fh *FibonacciHeap) DecreaseScore(v float64, c interface{}) {
 	node := fh.nodes[c]
 	node.value = v
 
@@ -112,7 +84,8 @@ func (fh *FibanaccyHeap) DecreaseKey(c interface{}, v float64) {
 	node.mark = false
 }
 
-func (fh *FibanaccyHeap) Min() (value float64, content interface{}) {
+// Min Returns the element with the smallest score in the heap and the score
+func (fh *FibonacciHeap) Min() (value float64, content interface{}) {
 	if fh.min == nil {
 		return
 	}
@@ -163,7 +136,7 @@ func (fh *FibanaccyHeap) Min() (value float64, content interface{}) {
 	return
 }
 
-func (fh *FibanaccyHeap) mergeNodes(parent *node, child *node) {
+func (fh *FibonacciHeap) mergeNodes(parent *node, child *node) {
 	// Remove the child from the current linked list
 	child.l.r = child.r
 	child.r.l = child.l
@@ -183,7 +156,7 @@ func (fh *FibanaccyHeap) mergeNodes(parent *node, child *node) {
 	parent.rank += child.rank
 }
 
-func (fh *FibanaccyHeap) print(from *node, deep int) {
+func (fh *FibonacciHeap) print(from *node, deep int) {
 	initial := true
 	aux := from
 	for aux != from || initial {
@@ -196,7 +169,7 @@ func (fh *FibanaccyHeap) print(from *node, deep int) {
 	}
 }
 
-func (fh *FibanaccyHeap) rebalance() {
+func (fh *FibonacciHeap) rebalance() {
 	balanced := false
 balance:
 	for !balanced {
@@ -220,5 +193,38 @@ balance:
 			balanced = node == fh.min
 			first = false
 		}
+	}
+}
+
+func (fh *FibonacciHeap) moveToRoot(n *node) {
+	if n.parent != nil {
+		if n.r != n {
+			n.parent.rank -= n.rank
+			n.parent.child = n.r
+		} else {
+			n.parent.child = nil
+			n.parent.rank = 1
+		}
+	}
+
+	n.r.l = n.l
+	n.l.r = n.r
+
+	n.r = fh.min.r
+	n.l = fh.min
+	fh.min.r.l = n
+	fh.min.r = n
+	n.parent = nil
+
+	if n.value < fh.min.value {
+		fh.min = n
+	}
+}
+
+func (fh *FibonacciHeap) moveMarkedParentsToRoot(n *node) {
+	if n.mark {
+		fh.moveMarkedParentsToRoot(n.parent)
+		n.mark = false
+		fh.moveToRoot(n)
 	}
 }

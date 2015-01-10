@@ -47,7 +47,7 @@ func TestAddMin(t *testing.T) {
 	}
 }
 
-func TestDecreaseKey(t *testing.T) {
+func TestDecreaseScore(t *testing.T) {
 	fh := New()
 	fh.Add(0.5, &testVal{123})
 	fh.Add(1, &testVal{123})
@@ -73,9 +73,9 @@ func TestDecreaseKey(t *testing.T) {
 
 	fh.Min()
 
-	fh.DecreaseKey(twelve, 2)
-	fh.DecreaseKey(fifteen, 4)
-	fh.DecreaseKey(fifteen, 1)
+	fh.DecreaseScore(2, twelve)
+	fh.DecreaseScore(4, fifteen)
+	fh.DecreaseScore(1, fifteen)
 
 	expectedMins := []float64{1, 1, 2, 5, 7, 9, 10, 17, 19, 22, 27, 28, 30, 31, 34, 36, 37, 38}
 	for _, v := range expectedMins {
