@@ -97,6 +97,8 @@ func (fh *FibonacciHeap) Min() (value float64, content interface{}) {
 		return
 	}
 
+	fh.length--
+
 	value = fh.min.value
 	content = fh.min.content
 
@@ -139,8 +141,6 @@ func (fh *FibonacciHeap) Min() (value float64, content interface{}) {
 	}
 
 	fh.rebalance()
-
-	fh.length--
 
 	return
 }
