@@ -18,8 +18,9 @@ type node struct {
 
 // FibonacciHeap Fibbonacy heap: http://en.wikipedia.org/wiki/Fibonacci_heap
 type FibonacciHeap struct {
-	min   *node
-	nodes map[interface{}]*node
+	min    *node
+	nodes  map[interface{}]*node
+	length int
 }
 
 // New Returns a new FibonacciHeap instance
@@ -57,6 +58,7 @@ func (fh *FibonacciHeap) Add(v float64, c interface{}) {
 			fh.min = newNode
 		}
 	}
+	fh.length++
 }
 
 // DecreaseScore decreases the score for an existing element in the heap
@@ -82,6 +84,11 @@ func (fh *FibonacciHeap) DecreaseScore(v float64, c interface{}) {
 
 	fh.moveToRoot(node)
 	node.mark = false
+}
+
+// Len Returns the total number of elements in the heap
+func (fh *FibonacciHeap) Len() int {
+	return fh.length
 }
 
 // Min Returns the element with the smallest score in the heap and the score
@@ -132,6 +139,8 @@ func (fh *FibonacciHeap) Min() (value float64, content interface{}) {
 	}
 
 	fh.rebalance()
+
+	fh.length--
 
 	return
 }
