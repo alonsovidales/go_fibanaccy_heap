@@ -61,9 +61,14 @@ func (fh *FibonacciHeap) Add(v float64, c interface{}) {
 	fh.length++
 }
 
-// DecreaseScore decreases the score for an existing element in the heap
+// DecreaseScore decreases the score for an existing element in the heap, if
+// the element is not found in the heap this method will add it
 func (fh *FibonacciHeap) DecreaseScore(v float64, c interface{}) {
-	node := fh.nodes[c]
+	node, exists := fh.nodes[c]
+	if !exists {
+		fh.Add(v, c)
+		return
+	}
 	node.value = v
 
 	if node.parent != nil {
