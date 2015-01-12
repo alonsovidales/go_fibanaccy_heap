@@ -30,6 +30,17 @@ func New() *FibonacciHeap {
 	}
 }
 
+// GetScore Returns the score of an element in the heap if exists, if not the
+// second returned value will be a false
+func (fh *FibonacciHeap) GetScore(c interface{}) (v float64, f bool) {
+	node, f := fh.nodes[c]
+	if f {
+		v = node.value
+	}
+
+	return
+}
+
 // Add adds a new value to the Fibonacci heap, v will be used as score for the
 // new element, and c has to contain the element to be added
 func (fh *FibonacciHeap) Add(v float64, c interface{}) {
